@@ -33,6 +33,13 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
         </dependency>
+        <dependency>
+            <groupId>org.bdawg</groupId>
+            <artifactId>OAConstans</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>C:\Users\breland.HOME\workspace\OAConstants\target\OAConstants-0.0.1-SNAPSHOT.jar</systemPath>
+        </dependency>
 	</dependencies>
 	<pluginRepositories>
 		<pluginRepository>
