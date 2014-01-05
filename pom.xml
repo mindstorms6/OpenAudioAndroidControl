@@ -35,10 +35,8 @@
         </dependency>
         <dependency>
             <groupId>org.bdawg</groupId>
-            <artifactId>OAConstans</artifactId>
+            <artifactId>OAConstants</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>C:\Users\breland.HOME\workspace\OAConstants\target\OAConstants-0.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
 	</dependencies>
 	<pluginRepositories>
@@ -52,9 +50,12 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<repositories>
-		<repository>
-			<id>lwa-repo</id>
-			<url>http://s3.amazonaws.com/oa_lwa</url>
+            <repository>
+                <id>bdawg-repo</id>
+                <url>https://s3.amazonaws.com/oa_lwa</url>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
 		</repository>
 	</repositories>
 
@@ -87,4 +88,76 @@
 
 		</plugins>
 	</build>
+    <profiles>
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.2</version>
+                        <executions>
+                            <execution>
+                                <id>signing</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <inherited>true</inherited>
+                                <configuration>
+                                    <archiveDirectory></archiveDirectory>
+                                    <includes>
+                                        <include>target/*.apk</include>
+                                    </includes>
+                                    <keystore>Z:\bdawg_signing_ks</keystore>
+                                    <storepass>${storepass}</storepass>
+                                    <keypass>${keypass}</keypass>
+                                    <alias>OASigning</alias>
+                                    <arguments>
+                                        <argument>-sigalg</argument><argument>SHA1withRSA</argument>
+                                        <argument>-digestalg</argument><argument>SHA1</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                        <artifactId>android-maven-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <release>true</release>
+                            <sign>
+                                <debug>false</debug>
+                            </sign>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.1.1</version>
+                        <executions>
+                            <execution>
+                                <id>zipalign</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>install</phase>
+                                <configuration>
+                                    <executable>${ANDROID_HOME}/tools/zipalign</executable>
+                                    <arguments>
+                                        <argument>-f</argument>
+                                        <argument>4</argument>
+                                        <argument>target/${project.build.finalName}.apk</argument>
+                                        <argument>target/${project.build.finalName}-zipped.apk</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

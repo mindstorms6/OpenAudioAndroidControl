@@ -1,13 +1,13 @@
 package org.bdawg.openaudio.control;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.*;
 
-import android.view.View;
 import android.widget.*;
 import com.amazon.identity.auth.device.authorization.api.AuthzConstants;
 import org.apache.http.HttpResponse;
@@ -17,8 +17,11 @@ import org.bdawg.open_audio.Utils.OAConstants;
 import org.bdawg.openaudio.Utils.Constants;
 import org.bdawg.openaudio.adapters.ClientListAdapter;
 import org.bdawg.openaudio.http_utils.HttpUtils;
+import org.bdawg.openaudio.views.BetterPopupWindow;
+import org.bdawg.openaudio.views.VolumeView;
 import org.bdawg.openaudio.webObjects.Client;
 import org.bdawg.openaudio.webObjects.PlaybackObject;
+import org.bdawg.openaudio.webObjects.VolumeObject;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
@@ -37,6 +40,8 @@ public class DevicesActivity extends Activity {
     private ImageButton playButton;
     private EditText mrlText;
     private ClientListAdapter clientAdapter;
+    private ImageButton volumeButton;
+    private int currentVolume;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,7 +52,7 @@ public class DevicesActivity extends Activity {
 		Bundle profileBundle = this.getIntent().getBundleExtra(MainActivity.AUTH_BUNDLE_KEY);
 	    String name = profileBundle.getString(AuthzConstants.PROFILE_KEY.NAME.val);
 	    this.setTitle(String.format(getString(R.string.title_activity_devices), name));
-	    this.mAccountId = profileBundle.getString(AuthzConstants.PROFILE_KEY.USER_ID.val);
+        this.mAccountId = profileBundle.getString(AuthzConstants.PROFILE_KEY.USER_ID.val);
         this.elv = (ListView)findViewById(R.id.expandableListView);
         this.mrlText = (EditText)findViewById(R.id.editText);
         this.elv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -59,6 +64,7 @@ public class DevicesActivity extends Activity {
             }
         });
         this.progress = (ProgressBar) findViewById(R.id.progressBar);
+        this.volumeButton = (ImageButton) findViewById(R.id.volume_button);
         this.playButton = (ImageButton) findViewById(R.id.play_button);
         this.playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +92,43 @@ public class DevicesActivity extends Activity {
                     });
                     postThread.start();
                 }
+        });
+        this.volumeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VolumeView vv = new VolumeView(DevicesActivity.this);
+                vv.setVolume(currentVolume);
+                vv.setOnVolumeChangedListener(new VolumeView.OnVolumeChangedListener() {
+                    @Override
+                    public void volumeChanged(final int newVolume) {
+                        Thread postThread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                VolumeObject vo = new VolumeObject();
+                                vo.setNewVolume(newVolume);
+                                DevicesActivity.this.currentVolume=newVolume;
+                                vo.setUserId(DevicesActivity.this.mAccountId);
+                                List<String> toChange = new ArrayList<String>();
+                                for (Client c : mFetchedDevices){
+                                    toChange.add(c.getClientId());
+                                }
+                                vo.setClientIds(toChange);
+                                try {
+                                    HttpUtils.executePost(OAConstants.WS_HOST + "control/volume",vo);
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        postThread.start();
+                    }
+                });
+                BetterPopupWindow pop = new BetterPopupWindow(DevicesActivity.this.volumeButton);
+                pop.setContentView(vv);
+                pop.showLikeQuickAction();
+
+            }
         });
 
         Thread fetchThread = new Thread(new Runnable() {
