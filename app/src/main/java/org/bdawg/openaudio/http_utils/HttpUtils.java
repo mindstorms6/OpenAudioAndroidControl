@@ -1,9 +1,6 @@
 package org.bdawg.openaudio.http_utils;
 
-import android.webkit.MimeTypeMap;
-import com.google.common.net.MediaType;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
