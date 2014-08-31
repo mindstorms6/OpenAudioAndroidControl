@@ -282,7 +282,7 @@ public class DevicesFragment extends BaseFragment {
         try {
             HttpResponse resp = HttpUtils.executeGet(OAConstants.WS_HOST + "/users/" + userId);
             if (resp.getStatusLine().getStatusCode() >= 200 && resp.getStatusLine().getStatusCode() <= 299){
-                ObjectMapper mapper = new ObjectMapper();
+                ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 tr = mapper.readValue(resp.getEntity().getContent(),new TypeReference<List<Client>>(){});
             }
         } catch (IOException e) {
