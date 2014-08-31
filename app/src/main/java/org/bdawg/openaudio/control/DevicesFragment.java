@@ -25,8 +25,9 @@ import org.bdawg.openaudio.http_utils.HttpUtils;
 import org.bdawg.openaudio.views.BetterPopupWindow;
 import org.bdawg.openaudio.views.VolumeView;
 import org.bdawg.openaudio.webObjects.*;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.util.*;
@@ -282,7 +283,8 @@ public class DevicesFragment extends BaseFragment {
         try {
             HttpResponse resp = HttpUtils.executeGet(OAConstants.WS_HOST + "/users/" + userId);
             if (resp.getStatusLine().getStatusCode() >= 200 && resp.getStatusLine().getStatusCode() <= 299){
-                ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 tr = mapper.readValue(resp.getEntity().getContent(),new TypeReference<List<Client>>(){});
             }
         } catch (IOException e) {
