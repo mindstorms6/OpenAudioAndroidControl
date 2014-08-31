@@ -31,6 +31,14 @@
             android:label="@string/app_name"
             >
             <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.APP_MUSIC" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+                <data android:mimeType="music/*" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -56,19 +64,11 @@
             android:name="org.bdawg.openaudio.control.DevicesActivity"
             android:label="@string/title_activity_devices"
             >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.bdawg.openaudio.control.MainActivity" />
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.APP_MUSIC" />
-                <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="video/*" />
-                <data android:mimeType="music/*" />
-            </intent-filter>
         </activity>
         <activity android:name=".ClaimActivity"/>
+        <activity android:name=".NavActivity" />
+
         <receiver
                 android:name="org.bdawg.openaudio.gcm.GcmBroadcastReceiver"
                 android:permission="com.google.android.c2dm.permission.SEND" >

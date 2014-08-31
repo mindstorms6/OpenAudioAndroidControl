@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "18.0.1"
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
         minSdkVersion 16
@@ -38,6 +38,5 @@ dependencies {
     compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
     compile group: 'org.bdawg', name: 'lwa', version: '0.0.1'
     compile group: 'org.bdawg', name: 'OAConstants', version: '0.0.1-SNAPSHOT'
-
-
+    compile 'com.android.support:support-v4:13.0.+'
 }

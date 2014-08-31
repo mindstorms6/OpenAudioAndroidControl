@@ -113,7 +113,7 @@ public abstract class BaseActivity extends Activity{
         }
     }
 
-    protected String getRegistrationId(Context context) {
+    public static String getRegistrationId(Context context) {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
@@ -135,10 +135,10 @@ public abstract class BaseActivity extends Activity{
     /**
      * @return Application's {@code SharedPreferences}.
      */
-    private SharedPreferences getGCMPreferences(Context context) {
+    private static SharedPreferences getGCMPreferences(Context context) {
         // This sample app persists the registration ID in shared preferences, but
         // how you store the regID in your app is up to you.
-        return getSharedPreferences(BaseActivity.class.getSimpleName(),
+        return context.getSharedPreferences(BaseActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
 

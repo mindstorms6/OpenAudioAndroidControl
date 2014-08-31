@@ -9,5 +9,10 @@
     <string name="main_authorized">Great! We see you\'ve logged in. We\'ll get your settings real quick and be on the way\!</string>
     <string name="title_activity_devices">%s\'s Devices</string>
     <string name="action_add_device">Claim</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string name="devices_drawer_title">Your Devices</string>
+    <string name="manual_offset_title">Set Manual Offset</string>
+    <string name="manual_offset_ok_button_title">OK</string>
 
 </resources>

@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity {
 								}
 							});
 							Intent deviceIntent = new Intent(MainActivity.this,
-									DevicesActivity.class);
+									NavActivity.class);
 							deviceIntent
 									.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 							deviceIntent
